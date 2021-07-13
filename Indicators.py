@@ -227,6 +227,16 @@ def Plot_Price_Signal(Indicator, Signal):
 	plt.show()
 
 
+#Function to plot Bolinger bands indicator
+def Plot_BollingerBands_Indicator():
+	BBdf = BBandsDF(df)
+	plt.title('Bollinger Bands')
+	plt.figure(figsize=(24,8))
+	plt.plot(BBdf['upper'], color = 'green', linewidth = .5, alpha = .75)
+	plt.plot(BBdf['middle'], color = 'blue',linewidth = .5, alpha = .75)
+	plt.plot(BBdf['lower'], color ='red', linewidth = .5, alpha = .75)
+	plt.show()
+
 #Create a function for the Bollinger Bands indicator
 def BollingerBands():
 	Signal = ISignals('BB')
@@ -243,6 +253,5 @@ def MACD():
 def RSI():
 	Signal = ISignals('RSI')
 	Plot_Price_Signal('RSI', Signal)
-
 
 
