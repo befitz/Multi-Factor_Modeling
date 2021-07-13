@@ -8,7 +8,10 @@ Provided a *ticker* and *period (1mo, 1y, 3y, max, etc.)*
 
 ## To display buy and sell signals given the indicator
 ### BollingerBands
+Disply the price and buy/sell signals:
 ```BollingerBands()```
+Display the indicator graph:
+```Plot_BollingerBands_indicator()```
 
 ### MACD
 ```MACD()```
