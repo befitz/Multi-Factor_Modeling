@@ -4,6 +4,7 @@ from Import_price_data import *
 def BBandsDF(df):
 	#TA-Lib to generate the bollinger bands
 	upper, middle, lower = talib.BBANDS(df['Close'], matype = 0) #MA_Type.T3
+
 	#Build the DataFrame
 	BBdf = pd.DataFrame()
 	BBdf['upper'] = upper
@@ -178,7 +179,7 @@ def RSIbuy_sell(signal):
 			rsiSigPriceBuy.append(np.NaN)
 			rsiSigPriceSell.append(np.NaN)
 			sig.append(flag)
-
+      
 	return (rsiSigPriceBuy, rsiSigPriceSell, sig)
 
 
@@ -228,6 +229,7 @@ def BollingerBands():
 	Signal = ISignals('BB')
 	Plot_Price_Signal('Bollinger_Bands', Signal)
 
+  
 #Create a function for the MACD Indicator
 def MACD():
 	Signal = ISignals('MACD')
@@ -240,6 +242,4 @@ def RSI():
 	Plot_Price_Signal('RSI', Signal)
 
 
-#BollingerBands()
-#MACD()
-RSI()
+
