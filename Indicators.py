@@ -29,7 +29,16 @@ def MACDdf(df):
 	return MACDdf
 
 
+#Create a function to make an RSI dataframe and signal line. Takes in prices dataframe, returns dataframe
+def RSIdf(df):
+	#TA-Lib to generate the RSI lines
+	rsi = talib.RSI(df['Close'],timeperiod=9)/100
+	RSIdf = pd.DataFrame()
+	RSIdf['rsi'] = rsi
+	RSIdf['Close'] = df['Close']
+	RSIdf = RSIdf.dropna()
 
+	return RSIdf
 
 
 #Create a function to signal when to buy/sell/hold
@@ -115,6 +124,60 @@ def MACDbuy_sell(signal):
   del (sigPriceBuy, sigPriceSell, sig)
 
 
+#Create a function to signal when to buy/sell/hold
+#signal: pandas.DataFrame including rsi and close price
+#Returns: lists
+#Long and hold will be 1
+#Short will be 0
+def RSIbuy_sell(signal):
+  flag = 0
+  sig = []
+  rsiSigPriceBuy = []
+  rsiSigPriceSell = []
+  for i in range(0,len(signal)):
+    #if RSI > 0.30  then buy else sell
+      if RSIdf['rsi'][i-1] <= 0.30:
+        if RSIdf['rsi'][i] >= 0.30:
+          if flag == 0:
+            rsiSigPriceBuy.append(RSIdf['Close'][i])
+            rsiSigPriceSell.append(np.NaN)
+            sig.append(1)
+            flag = 1
+          else:
+            rsiSigPriceBuy.append(np.NaN)
+            rsiSigPriceSell.append(np.NaN)
+            sig.append(1)
+            flag = 1
+        else:
+          rsiSigPriceBuy.append(np.NaN)
+          rsiSigPriceSell.append(np.NaN)
+          sig.append(flag)
+          flag = flag
+      elif RSIdf['rsi'][i-1] >= 0.70:
+        if RSIdf['rsi'][i] <= 0.70:
+          if flag == 0:
+            rsiSigPriceBuy.append(np.NaN)
+            rsiSigPriceSell.append(np.NaN)
+            sig.append(0)
+            flag = 0
+          else:
+            rsiSigPriceBuy.append(np.NaN)
+            rsiSigPriceSell.append(RSIdf['Close'][i])
+            sig.append(0)
+            flag = 0
+        else:
+          rsiSigPriceBuy.append(np.NaN)
+          rsiSigPriceSell.append(np.NaN)
+          sig.append(flag)
+          flag = flag
+      else: #Handling nan values
+        rsiSigPriceBuy.append(np.NaN)
+        rsiSigPriceSell.append(np.NaN)
+        sig.append(flag)
+  
+  return (rsiSigPriceBuy, rsiSigPriceSell, sig)
+
+
 #Create function to create signal columns for buy/sell and signals of the indicator. Takes in signal and indicator, returns indicator dataframe with signals
 #IndicatorDataFrame is the result of the function that creates the indicator
 #Signal is the result of the *buy_sell(*df) input
@@ -159,5 +222,15 @@ def MACD():
 	MACDFinal = ISignals(Signal, IndicatorDataFrame)
 	Plot_Price_Signal('MACD', MACDFinal)
 
+
+#Create a function for the RSI Indicator
+def RSI():
+	Signal = RSIdf(df)
+	IndicatorDataFrame = RSIbuy_sell(Signal)
+	RSIFinal = ISignals(Signal,IndicatorDataFrame)
+	Plot_Price_Signal('RSI', RSIFinal)
+
+
 BollingerBands()
 MACD()
+RSI()
