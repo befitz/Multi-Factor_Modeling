@@ -235,6 +235,7 @@ def Plot_BollingerBands_Indicator():
 	plt.plot(BBdf['upper'], color = 'green', linewidth = .5, alpha = .75)
 	plt.plot(BBdf['middle'], color = 'blue',linewidth = .5, alpha = .75)
 	plt.plot(BBdf['lower'], color ='red', linewidth = .5, alpha = .75)
+	plt.title('Bollinger Bands')
 	plt.show()
 
 #Create a function for the Bollinger Bands indicator
