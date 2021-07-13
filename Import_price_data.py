@@ -1,6 +1,7 @@
-import talib
+import pandas_datareader.data as pdr
 from pandas_datareader import DataReader
 from pandas_datareader import data as web
+import talib
 import pandas as pd
 import numpy as np
 import datetime as dt
@@ -9,14 +10,17 @@ import statsmodels.api as smf
 import math
 import pandas.util.testing as tm
 import matplotlib.pyplot as plt
-%matplotlib inline
+import yfinance as yf
+
+
+
 plt.style.use('fivethirtyeight')
 
 #Set start/end dates to pull historic price data
-end = dt.datetime.today()
-start = (dt.datetime.now() - dt.timedelta(days=6000)).strftime("%m-%d-%Y")
-
-ticker = 'UPST'
+end = dt.datetime.today().strftime("%Y-%m-%d")
+start = (dt.datetime.now() - dt.timedelta(days=360)).strftime("%Y-%m-%d")
+#ticker = input("Ticker:")
+ticker = 'AAPL'
 #Request historic price data from pandas datareader
 df = web.DataReader(f'{ticker}', data_source='yahoo', start=start)
 
