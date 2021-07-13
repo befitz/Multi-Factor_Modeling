@@ -240,6 +240,4 @@ def RSI():
 	Plot_Price_Signal('RSI', Signal)
 
 
-#BollingerBands()
-#MACD()
-RSI()
+
