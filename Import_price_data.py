@@ -12,16 +12,15 @@ import pandas.util.testing as tm
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 
-#Set start/end dates to pull historic price data
-end = dt.datetime.today().strftime("%Y-%m-%d")
-start = (dt.datetime.now() - dt.timedelta(days=1000)).strftime("%m-%d-%Y")
 
-#ticker = 'SPY'
-ticker = yf.Ticker("AAPL")
-#Request historic price data from pandas datareader
-#df = web.DataReader(f'{ticker}', data_source='yahoo', start=start)
-df = ticker.history(period="2y")
-#Create Lags
-df['CloseLag1'] = df['Close'].shift(-1)
-df['CloseLag2'] = df['Close'].shift(-2)
-#df['Close'] = df['Adj Close']
+#function to take in a ticker and period (1mo, 1y, 3y etc.) and return dataframe
+def get_historical_prices(ticker, period):
+	ticker = yf.Ticker(f"{ticker}")
+	df = ticker.history(period=f"{period}")
+	#Create Lags
+	df['CloseLag1'] = df['Close'].shift(-1)
+	df['CloseLag2'] = df['Close'].shift(-2)
+
+	return df
+
+
