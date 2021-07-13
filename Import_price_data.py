@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 
 
+
 #function to take in a ticker and period (1mo, 1y, 3y etc.) and return dataframe
 def get_historical_prices(ticker, period):
 	ticker = yf.Ticker(f"{ticker}")
@@ -22,5 +23,4 @@ def get_historical_prices(ticker, period):
 	df['CloseLag2'] = df['Close'].shift(-2)
 
 	return df
-
 
