@@ -12,12 +12,15 @@ import pandas.util.testing as tm
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 
-ticker = 'AAPL'
 
-#Request historic price data from yfinance
 
-df = ticker.history(period="2y")
+#function to take in a ticker and period (1mo, 1y, 3y etc.) and return dataframe
+def get_historical_prices(ticker, period):
+	ticker = yf.Ticker(f"{ticker}")
+	df = ticker.history(period=f"{period}")
+	#Create Lags
+	df['CloseLag1'] = df['Close'].shift(-1)
+	df['CloseLag2'] = df['Close'].shift(-2)
 
-#Create Lags
-df['CloseLag1'] = df['Close'].shift(-1)
-df['CloseLag2'] = df['Close'].shift(-2)
+	return df
+
