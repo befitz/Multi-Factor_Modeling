@@ -26,36 +26,6 @@ Display the indicator graph:
 
 # Fama French 3-Factor Model
 
-($R_{it} - RF_{ft} )= a_i + b_i (Mkt-RF) + s_iSMB + h_iHML + e_i$
-
-Where:
-
-
-
-*   $R_i$ is the daily return of the porfolio
-*   $RF_t$ is the risk free rate
-
-
-*   $Mkt-RF$ is the return spread between the capitalization weighted stock market and cash
-*   $SMB$ is the return spread of small minus large stocks (i.e. the size effect)
-
-
-*   $HML$ is the return spread of cheap minus expensive stocks (i.e. the value effect)
-
-
-**Extension to the FF model:**
-
-($R_i - RF_t )= a_i + b_i (Mkt-RF) + s_iSMB + h_iHML + g_i Indicator + e_i$
-
-
-
-*   Adding the sudo-variable, $Indicator$ which is 0 for short and 1 for long or hold
-
-*   The logarithmic risk-free returns $(R_{it}-R_{ft})$ are used as the independent variable and calculated as follows:
-
-
-$(R_{it}-R_{ft}) = ln((ClosingPrice_{t} - ClosingPrice_{t-1}) - RF_t)$
-
 
 ## OLS Regression Model Fama-French 3 Factors
 
