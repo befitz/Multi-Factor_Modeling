@@ -1,6 +1,6 @@
 from Import_price_data import *
 from Indicators import *
-
+from statsmodels.formula.api import ols
 
 df = get_historical_prices("AAPL", "2y")
 
@@ -35,10 +35,13 @@ def daily_lnRFreturns(df):
 #Create function to merge signals with the fama-french data
 def merge_indicators_ff():
 	BolingerBands_df = ISignals('BB')
+	BolingerBands_df = BolingerBands_df.rename(columns={'Signal': 'BB_Signal'})
 	BollingerBands_Signal = BolingerBands_df['BB_Signal']
 	MACDdf = ISignals('MACD')
+	MACDdf = MACDdf.rename(columns={'Signal': 'MACD_Signal'})
 	MACD_Signal = MACDdf['MACD_Signal']
 	RSIdf = ISignals('RSI')
+	RSIdf = RSIdf.rename(columns={'Signal': 'RSI_Signal'})
 	RSI_Signal = RSIdf['RSI_Signal']
 	DailyReturnsDF, ff_3_factor_df = daily_lnRFreturns(df)
 	#merge the indicators with the f-f dataframe
@@ -48,6 +51,17 @@ def merge_indicators_ff():
 	ff_3_factor_final = pd.merge(ff_3_factor_3, RSI_Signal, on = 'Date')
 	ff_3_factor_final = ff_3_factor_final.dropna() #drop NA values
 
-	print(ff_3_factor_final)
+	return ff_3_factor_final
 
-merge_indicators_ff()
+
+#Create a function to model MACD and FF3F
+def MACD_FF3F():
+	ff_3_factor_final = merge_indicators_ff()
+	formula = 'ln_RFreturns ~ Mkt_RF + SMB + HML + MACD_Signal'
+	MACD3model_2 = ols(formula = formula , data = ff_3_factor_final)
+	MACD3model_hac = MACD3model_2.fit(cov_type = 'HAC', cov_kwds = {'maxlags':None}, use_t=True)
+
+	print(MACD3model_hac.summary())
+
+
+MACD_FF3F()

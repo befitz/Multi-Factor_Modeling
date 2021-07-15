@@ -196,15 +196,12 @@ def ISignals(indicator):
 		Signal = BBandsDF(df)
 		#Function for the Indicators
 		IndicatorDataFrame = BBbuy_sell(Signal)
-		Signal = Signal.rename(columns={"Signal": "BB_Signal"})
 	elif indicator == 'MACD':
 		Signal = MACDdf(df)
 		IndicatorDataFrame = MACDbuy_sell(Signal)
-		Signal = Signal.rename(columns={'Signal': 'MACD_Signal'})
 	elif indicator == 'RSI':
 		Signal = RSIdf(df)
 		IndicatorDataFrame = RSIbuy_sell(Signal)
-		Signal = Signal.rename(columns={'Signal': 'MACD_Signal'})
 	Signal['Buy_Signal_Price'] = IndicatorDataFrame[0]
 	Signal['Sell_Signal_Price'] = IndicatorDataFrame[1]
 	Signal['Signal'] = IndicatorDataFrame[2]
