@@ -51,31 +51,14 @@ def merge_indicators_ff():
 	return ff_3_factor_final
 
 
-#Create a function to model MACD and FF3F
-def MACD_FF3F():
+#Create a function to model indicator and FF3F
+def FF3F(indicator):
 	ff_3_factor_final = merge_indicators_ff()
-	formula = 'ln_RFreturns ~ Mkt_RF + SMB + HML + MACD_Signal'
-	MACD3model_2 = ols(formula = formula , data = ff_3_factor_final)
-	MACD3model_hac = MACD3model_2.fit(cov_type = 'HAC', cov_kwds = {'maxlags':None}, use_t=True)
-
-	print(MACD3model_hac.summary())
-
-
-#Function to model RSI and FF3F
-def RSI_FF3F():
-	ff_3_factor_final = merge_indicators_ff()
-	formula = 'ln_RFreturns ~ Mkt_RF + SMB + HML + RSI_Signal'
-	RSI3model_HAC = ols(formula = formula , data = ff_3_factor_final)
-	RSI3model_HAC = RSI3model_HAC.fit(cov_type = 'HAC', cov_kwds = {'maxlags':1}, use_t=True)
-	print(RSI3model_HAC.summary())
+	formula = f'ln_RFreturns ~ Mkt_RF + SMB + HML + {indicator}_Signal'
+	FF3Fmodel = ols(formula = formula , data = ff_3_factor_final)
+	FF3Fmodel_HAC = FF3Fmodel.fit(cov_type = 'HAC', cov_kwds = {'maxlags':None}, use_t=True)
+	print(FF3Fmodel_HAC.summary())
 
 
-#Function to model BB and FF3F
-def BB_FF3F():
-	ff_3_factor_final = merge_indicators_ff()
-	formula = 'ln_RFreturns ~ Mkt_RF + SMB + HML + BB_Signal'
-	BBmodel_HAC = ols(formula = formula , data = ff_3_factor_final)
-	BBmodel_HAC = BBmodel_HAC.fit(cov_type = 'HAC', cov_kwds = {'maxlags':1}, use_t=True)
-	print(BBmodel_HAC.summary())
 
-MACD_FF3F()
+FF3F('BB')
