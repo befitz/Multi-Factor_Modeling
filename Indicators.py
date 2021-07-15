@@ -1,12 +1,13 @@
 from Import_price_data import *
+from talib import MA_Type
 
 #Function from Import_price_data to create df of price
-df = get_historical_prices("TQQQ", "2y")
+df = get_historical_prices("AAPL", "3y")
 
 #Create a function to create Bollinger Bands dataframe. Takes in prices dataframe, returns dataframe
 def BBandsDF(df):
 	#TA-Lib to generate the bollinger bands
-	upper, middle, lower = talib.BBANDS(df['Close'], matype = 0) #MA_Type.T3
+	upper, middle, lower = talib.BBANDS(df['Close'], nbdevup=2, nbdevdn=2, matype = MA_Type.T3) #MA_Type.T3
 
 	#Build the DataFrame
 	BBdf = pd.DataFrame()
@@ -254,5 +255,4 @@ def MACD():
 def RSI():
 	Signal = ISignals('RSI')
 	Plot_Price_Signal('RSI', Signal)
-
 
