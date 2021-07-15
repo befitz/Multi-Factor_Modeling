@@ -26,7 +26,7 @@ Display the indicator graph:
 
 # Fama French 3-Factor Model
 
-($R_{it} - RF_{ft} )= a_i + b_i (Mkt-RF) + s_iSMB + h_iHML + e_i$
+($$R_{it} - RF_{ft} )= a_i + b_i (Mkt-RF) + s_iSMB + h_iHML + e_i$$
 
 Where:
 
