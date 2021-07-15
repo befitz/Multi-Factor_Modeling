@@ -23,3 +23,14 @@ Display the indicator graph:
 
 ### RSI
 ```RSI()```
+
+## OLS Regression Model Fama-French 3 Factors
+
+### MACD
+```MACD_FF3F()```
+
+### RSI
+```RSI_FF3F()```
+
+### Bollinger Bands
+```BB_FF3F()```
