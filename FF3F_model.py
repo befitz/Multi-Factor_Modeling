@@ -2,9 +2,6 @@ from Import_price_data import *
 from Indicators import *
 from statsmodels.formula.api import ols
 
-df = get_historical_prices("AAPL", "2y")
-
-
 #Function to import the fama french three factor model data
 def ff_3_factor_data():
 	#Set start and end date - should be in line with the historical prices input
@@ -63,5 +60,22 @@ def MACD_FF3F():
 
 	print(MACD3model_hac.summary())
 
+
+#Function to model RSI and FF3F
+def RSI_FF3F():
+	ff_3_factor_final = merge_indicators_ff()
+	formula = 'ln_RFreturns ~ Mkt_RF + SMB + HML + RSI_Signal'
+	RSI3model_HAC = ols(formula = formula , data = ff_3_factor_final)
+	RSI3model_HAC = RSI3model_HAC.fit(cov_type = 'HAC', cov_kwds = {'maxlags':1}, use_t=True)
+	print(RSI3model_HAC.summary())
+
+
+#Function to model BB and FF3F
+def BB_FF3F():
+	ff_3_factor_final = merge_indicators_ff()
+	formula = 'ln_RFreturns ~ Mkt_RF + SMB + HML + BB_Signal'
+	BBmodel_HAC = ols(formula = formula , data = ff_3_factor_final)
+	BBmodel_HAC = BBmodel_HAC.fit(cov_type = 'HAC', cov_kwds = {'maxlags':1}, use_t=True)
+	print(BBmodel_HAC.summary())
 
 MACD_FF3F()

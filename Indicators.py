@@ -1,7 +1,7 @@
 from Import_price_data import *
 
 #Function from Import_price_data to create df of price
-df = get_historical_prices("AAPL", "2y")
+df = get_historical_prices("TQQQ", "2y")
 
 #Create a function to create Bollinger Bands dataframe. Takes in prices dataframe, returns dataframe
 def BBandsDF(df):
