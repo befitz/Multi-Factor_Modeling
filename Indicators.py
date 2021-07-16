@@ -210,34 +210,47 @@ def ISignals(indicator):
 	return Signal
 
 
-#Create a function that plots the price and signal. Takes in the name of the indicator ('Indicator'), IndicatorDataFrame and displays a plot
-def Plot_Price_Signal(Indicator, Signal):
+#Create a function to display 2 plots, one for the buy/sell signal and one for the indicator lines
+def Plot_Indicator_Signals(Indicator):
 	Indicator = Indicator
-	Signal = Signal
-	title = f'Close Price History Long/Short {Indicator} Signals'
-	#Create and plot the graph
-	plt.figure(figsize=(24,8)) #width = 24in, height = 8
-	plt.scatter(Signal.index, Signal['Buy_Signal_Price'], color = 'green', label='Buy Signal', marker = '^', alpha = 1)
-	plt.scatter(Signal.index, Signal['Sell_Signal_Price'], color = 'red', label='Sell Signal', marker = 'v', alpha = 1)
-	plt.plot( Signal['Close'],  label='Close Price', alpha = 0.35)#plt.plot( X-Axis , Y-Axis, line_width, alpha_for_blending,  label)
-	plt.xticks(rotation=45)
-	plt.title(title)
-	plt.xlabel('Date',fontsize=18)
-	plt.ylabel('Close Price USD ($)',fontsize=18)
-	plt.legend( loc='upper left')
+	Signal = ISignals(f'{Indicator}')
+	fig, (ax0, ax1) = plt.subplots(2, 1, sharex = True, figsize= (24,8))
+	ax0.plot(Signal.index, Signal['Close'], alpha = .5)
+	ax0.scatter(Signal.index, Signal['Buy_Signal_Price'], color = 'green', label='Buy Signal', marker = '^', alpha = 1)
+	ax0.scatter(Signal.index, Signal['Sell_Signal_Price'], color = 'red', label='Sell Signal', marker = 'v', alpha = 1)
+	ax0.set_xlabel('Date',fontsize=12)
+	ax0.set_ylabel('Close Price USD ($)',fontsize=18)
+	ax0.grid(True)
+	
+	if Indicator == 'BB':
+		BBdf = BBandsDF(df)
+		ax1.plot(BBdf['upper'], color = 'green', linewidth = .5, alpha = .75)
+		ax1.plot(BBdf['middle'], color = 'blue',linewidth = .5, alpha = .75)
+		ax1.plot(BBdf['lower'], color ='red', linewidth = .5, alpha = .75)
+	elif Indicator == 'MACD':
+		MACD_df = MACDdf(df)
+		ax1.plot(MACD_df['macd'], label = 'MACD', linewidth = .75, alpha = .75)
+		ax1.plot(MACD_df['macdsignal'], label = 'Signal', linewidth = .75, alpha = .75)
+	elif Indicator == 'RSI':
+		RSI_df = RSIdf(df)
+		ax1.plot(RSI_df['rsi'])
+		ax1.axhline(0, linestyle = '--', alpha = 0.5, color='gray')
+		ax1.axhline(.10, linestyle = '--', alpha = 0.5, color='orange')
+		ax1.axhline(.20, linestyle = '--', alpha = 0.5, color='green')
+		ax1.axhline(.30, linestyle = '--', alpha = 0.5, color='red')
+		ax1.axhline(.70, linestyle = '--', alpha = 0.5, color='red')
+		ax1.axhline(.80, linestyle = '--', alpha = 0.5, color='green')
+		ax1.axhline(.90, linestyle = '--', alpha = 0.5, color='orange')
+		ax1.axhline(1, linestyle = '--', alpha = 0.5, color='gray')
+	
+	ax1.set_xlabel('Date', fontsize = 12)
+	ax1.set_ylabel(f'{Indicator}')
+	ax1.grid(True)
+
+	fig.tight_layout()
 	plt.show()
 
 
-#Function to plot Bolinger bands indicator
-def Plot_BollingerBands_Indicator():
-	BBdf = BBandsDF(df)
-	plt.title('Bollinger Bands')
-	plt.figure(figsize=(24,8))
-	plt.plot(BBdf['upper'], color = 'green', linewidth = .5, alpha = .75)
-	plt.plot(BBdf['middle'], color = 'blue',linewidth = .5, alpha = .75)
-	plt.plot(BBdf['lower'], color ='red', linewidth = .5, alpha = .75)
-	plt.title('Bollinger Bands')
-	plt.show()
 
 #Create a function for the Bollinger Bands indicator
 def BollingerBands():
