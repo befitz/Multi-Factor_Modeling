@@ -62,3 +62,5 @@ def FF3F(indicator):
 
 
 FF3F('BB')
+FF3F('MACD')
+FF3F('RSI')
