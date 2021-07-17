@@ -269,3 +269,4 @@ def RSI():
 	Signal = ISignals('RSI')
 	Plot_Price_Signal('RSI', Signal)
 
+Plot_Indicator_Signals('BB')
