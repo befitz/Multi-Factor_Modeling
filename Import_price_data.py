@@ -24,3 +24,4 @@ def get_historical_prices(ticker, period):
 
 	return df
 
+	
