@@ -41,4 +41,4 @@ def test_all(ticker, period):
 
 
 
-test_all('AMC', '6mo')
+#test_all('AMC', '6mo')
