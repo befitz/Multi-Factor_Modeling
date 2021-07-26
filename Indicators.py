@@ -220,8 +220,9 @@ def ISignals(df, indicator):
 
 
 #Create a function to display 2 plots, one for the buy/sell signal and one for the indicator lines
-def Plot_Single_Indicator_Signals(Indicator, ticker, period):
-	df = get_historical_prices(f"{ticker}", f"{period}")
+def Plot_Single_Indicator_Signals(Indicator, ticker, start_date):
+	df = get_historical_prices(f"{ticker}", "1y")
+	df = df.loc[f'{start_date}':]
 	Indicator = Indicator
 	Signal = ISignals(df, f'{Indicator}')
 	fig, (ax0, ax1) = plt.subplots(2, 1, sharex = True, figsize= (24,8))
@@ -262,70 +263,67 @@ def Plot_Single_Indicator_Signals(Indicator, ticker, period):
 	plt.show()
 
 
-#Function to display all indicators
-def Plot_All_Indicator_Signals(ticker, period):
-	df = get_historical_prices(f"{ticker}", f"{period}")
+#Function to display all indicators start_date format yyyy-mm-dd
+def Plot_All_Indicator_Signals(ticker, start_date):
+	df = get_historical_prices(f"{ticker}", "1y")
 	SMASignal = SimpleMAdf(df)
+	SMASignal = SMASignal.loc[f'{start_date}':]
 	BBSignal = ISignals(df, 'BB')
+	BBSignal = BBSignal.loc[f'{start_date}':]
 	MACDSignal = ISignals(df, 'MACD')
+	MACDSignal = MACDSignal.loc[f'{start_date}':]
 	RSISignal = ISignals(df, 'RSI')
-
+	RSISignal = RSISignal.loc[f'{start_date}':]
+	#Plot the SMA and closing price of the stock
 	fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1, sharex = True, figsize= (24,10))
-	ax0.plot(SMASignal.index, SMASignal['Close'], alpha = .75, linewidth = 2, color = 'k', label = 'Close Price $')
+	ax0.plot(SMASignal.index, SMASignal['Close'], alpha = .75, linewidth = 1, color = 'k', label = 'Close Price $')
 	ax0.plot(SMASignal.index, SMASignal['SMA'], alpha = .75, linewidth = 1, color = 'b', label = 'Simple Moving Average (180 days)')
-	
-	ax0.scatter(BBSignal.index, BBSignal['Buy_Signal_Price'], s=75, color = 'green', label='Buy Signal', marker = '^', alpha = 1)
-	ax0.scatter(BBSignal.index, BBSignal['Sell_Signal_Price'], s=75, color = 'red', label='Sell Signal', marker = 'v', alpha = 1)
-
-	ax0.scatter(MACDSignal.index, MACDSignal['Buy_Signal_Price'], s = 75, color = 'green', marker = '^', alpha = 1)
-	ax0.scatter(MACDSignal.index, MACDSignal['Sell_Signal_Price'], s=75, color = 'red', marker = 'v', alpha = 1)
-
-	ax0.scatter(RSISignal.index, RSISignal['Buy_Signal_Price'], s=75, color = 'green', marker = '^', alpha = 1)
-	ax0.scatter(RSISignal.index, RSISignal['Sell_Signal_Price'], s=75, color = 'red', marker = 'v', alpha = 1)
-
-	ax0.set_xlabel('Date',fontsize=12)
+	#using ^ and v to note buys and sells
+	ax0.scatter(BBSignal.index, BBSignal['Buy_Signal_Price'], s=75, color = 'green', label='Buy Signal', marker = '^', alpha = .5)
+	ax0.scatter(BBSignal.index, BBSignal['Sell_Signal_Price'], s=75, color = 'red', label='Sell Signal', marker = 'v', alpha = .5)
+	ax0.scatter(MACDSignal.index, MACDSignal['Buy_Signal_Price'], s = 75, color = 'green', marker = '^', alpha = .5)
+	ax0.scatter(MACDSignal.index, MACDSignal['Sell_Signal_Price'], s=75, color = 'red', marker = 'v', alpha = .5)
+	ax0.scatter(RSISignal.index, RSISignal['Buy_Signal_Price'], s=75, color = 'green', marker = '^', alpha = .5)
+	ax0.scatter(RSISignal.index, RSISignal['Sell_Signal_Price'], s=75, color = 'red', marker = 'v', alpha = .5)
 	ax0.set_ylabel('Close Price USD ($)',fontsize=18)
-	ax0.legend(loc=0)
+	ax0.legend(loc=0, fontsize=10)
 	ax0.grid(True)
-
+	#Plot bollinger band lines with closing price
 	BBdf = BBandsDF(df)
+	BBdf = BBdf.loc[f'{start_date}':]
 	ax1.plot(BBdf['upper'], color = 'green', linewidth = .75, alpha = .75, label = 'Upper Band')
 	ax1.plot(BBdf['middle'], color = 'blue',linewidth = .75, alpha = .75, label = 'Middle Band')
 	ax1.plot(BBdf['lower'], color ='red', linewidth = .75, alpha = .75, label= 'Lower Band')
 	ax1.plot(SMASignal.index, SMASignal['Close'], alpha = .75, linewidth = 1.25, color ='k', label = 'Close Price $')
-	ax1.set_xlabel('Date', fontsize = 12)
 	ax1.set_ylabel('Bollinger Bands')
-	ax1.legend(loc=0)
+	ax1.legend(loc=0, fontsize=10)
 	ax1.grid(True)
-
+	#Plot MACD lines
 	MACD_df = MACDdf(df)
+	MACD_df = MACD_df.loc[f'{start_date}':]
 	ax2.plot(MACD_df['macd'], label = 'MACD', linewidth = .75, alpha = .75)
 	ax2.plot(MACD_df['macdsignal'], label = 'MACD Signal', linewidth = .75, alpha = .75)
-	ax2.set_xlabel('Date', fontsize = 12)
 	ax2.set_ylabel('MACD')
-	ax2.legend(loc=0)
+	ax2.legend(loc=0, fontsize=10)
 	ax2.grid(True)
-
+	#Plot RSI line and line idicators for 0-100%
 	RSI_df = RSIdf(df)
-	ax3.plot(RSI_df['rsi'], label = 'RSI', linewidth=1, alpha=1)
-	ax3.axhline(0, linestyle = '--', alpha = 0.5, color='gray')
-	ax3.axhline(.10, linestyle = '--', alpha = 0.5, color='orange')
-	ax3.axhline(.20, linestyle = '--', alpha = 0.5, color='green')
-	ax3.axhline(.30, linestyle = '--', alpha = 0.5, color='red')
-	ax3.axhline(.70, linestyle = '--', alpha = 0.5, color='red')
-	ax3.axhline(.80, linestyle = '--', alpha = 0.5, color='green')
-	ax3.axhline(.90, linestyle = '--', alpha = 0.5, color='orange')
-	ax3.axhline(1, linestyle = '--', alpha = 0.5, color='gray')
-	
+	RSI_df = RSI_df.loc['2021-07-12':]
+	ax3.plot(RSI_df['rsi'], label = 'RSI', linewidth=1.5, alpha=1)
+	ax3.axhline(0, linestyle = '--', alpha = 0.5, linewidth=.75, color='gray')
+	ax3.axhline(.10, linestyle = '--', alpha = 0.5, linewidth=.75, color='orange')
+	ax3.axhline(.20, linestyle = '--', alpha = 0.5, linewidth=.75, color='green')
+	ax3.axhline(.30, linestyle = '--', alpha = 0.5, linewidth=.75, color='red')
+	ax3.axhline(.70, linestyle = '--', alpha = 0.5, linewidth=.75, color='red')
+	ax3.axhline(.80, linestyle = '--', alpha = 0.5, linewidth=.75, color='green')
+	ax3.axhline(.90, linestyle = '--', alpha = 0.5, linewidth=.75, color='orange')
+	ax3.axhline(1, linestyle = '--', alpha = 0.5, linewidth=.75, color='gray')
 	ax3.set_xlabel('Date', fontsize = 12)
 	ax3.set_ylabel('RSI')
-	ax3.legend(loc=0)
+	ax3.legend(loc=0, fontsize=10)
 	ax3.grid(True)
 
 	fig.tight_layout()
 	plt.show()
 
 
-
-
-#Plot_All_Indicator_Signals('AMC', '6mo')
