@@ -13,8 +13,9 @@ Provided a *ticker* and *period (1mo, 1y, 3y, max, etc.)*
 ```df = get_historical_prices(*ticker,*period)```
 
 ## To display buy and sell signals given the indicator
+
 ### BollingerBands
-```Plot_Indicator_Signals(Indicator)```
+```Plot_Signal_Indicator_Signals(Indicator)```
 Indicator is the name of the TA (Ex: 'MACD', 'BB', 'RSI')
 
 # Fama French 3-Factor Model
